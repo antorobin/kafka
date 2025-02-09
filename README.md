@@ -36,4 +36,4 @@ kubectl apply -f statefulset.yaml.yaml
 kubectl apply -f kafdrop.yaml
 ```
 
-**"For more details and advanced configurations"**, check out the full article: [Deployment of Kafka in KRaft Mode on Kubernetes] (https://medium.com/@antorobin/kafka-in-kraft-mode-in-a-production-setup-on-aks-a134c46c0ee5)
+**"For more details and advanced configurations"**, check out the full article: [Deployment of Kafka in KRaft Mode on Kubernetes](https://medium.com/@antorobin/kafka-in-kraft-mode-in-a-production-setup-on-aks-a134c46c0ee5)
