@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+spec:
+  replicas: 3
+  serviceName: kafka-service
+  selector:
+    matchLabels:
+      app: kafka
+  template:
+    metadata:
+      labels:
+        app: kafka
+    spec:
+      securityContext:
+        runAsUser: 0
+      
+      containers:
+        - name: kafka
+          image: confluentinc/cp-kafka:7.8.0
+          command:
+            - sh
+            - -c
+            - |
+              POD_ID=$(echo $POD_NAME | grep -o '[0-9]*$')         
+              
+              # Start Kafka
+              echo "STARTING KAFKA... "
+              /usr/bin/kafka-storage format --config /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties --cluster-id my-cluster-id && \
+              exec /usr/bin/kafka-server-start /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties
+              
+             
+          ports:
+            - containerPort: 9092
+            - containerPort: 9093
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            
+          volumeMounts:
+            - name: kafka-data-vol
+              mountPath: /var/lib/kafka/data
+              readOnly: false
+            - name: writable-config
+              mountPath: /tmp/kafka
+              readOnly: false
+            - name: kafka-config-0
+              mountPath: /etc/kafka-configs/kafka-config-0
+              readOnly: true
+            - name: kafka-config-1
+              mountPath: /etc/kafka-configs/kafka-config-1
+              readOnly: true
+            - name: kafka-config-2
+              mountPath: /etc/kafka-configs/kafka-config-2
+              readOnly: true
+      volumes:
+        - name: kafka-config-0
+          configMap:
+            name: kafka-config-0
+        - name: kafka-config-1
+          configMap:
+            name: kafka-config-1
+        - name: kafka-config-2
+          configMap:
+            name: kafka-config-2
+        - name: writable-config
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: kafka-data-vol
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: 2Gi
+        storageClassName: storageclass-azurefile

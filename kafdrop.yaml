@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kafdrop
+  labels:
+    app: kafdrop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: kafdrop
+  template:
+    metadata:
+      labels:
+        app: kafdrop
+    spec:
+      containers:
+      - name: kafdrop
+        image: obsidiandynamics/kafdrop:3.30.0
+        ports:
+        - containerPort: 9000
+        env:
+        - name: KAFKA_BROKER_CONNECT
+          value: "PLAINTEXT://kafka-0.kafka-service.kafka-demo.svc.cluster.local:9092,PLAINTEXT://kafka-1.kafka-service.kafka-demo.svc.cluster.local:9092,PLAINTEXT://kafka-2.kafka-service.kafka-demo.svc.cluster.local:9092"
+        - name: JVM_OPTS
+          value: "-Xms32M -Xmx64M"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafdrop-service
+spec:
+  type: LoadBalancer  
+  ports:
+  - port: 9000
+    targetPort: 9000
+  selector:
+    app: kafdrop

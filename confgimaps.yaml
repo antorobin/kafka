@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config-0
+data:
+  kafka.properties: |
+    process.roles=controller,broker
+    controller.quorum.voters=0@kafka-0.kafka-service.kafka-demo.svc.cluster.local:9093,1@kafka-1.kafka-service.kafka-demo.svc.cluster.local:9093,2@kafka-2.kafka-service.kafka-demo.svc.cluster.local:9093
+    node.id=0
+    broker.id=0
+    cluster.id=my-cluster-id
+    log.dirs=/var/lib/kafka/data
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+    listeners.security.protocol.map=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+    inter.broker.listener.name=PLAINTEXT
+    controller.listener.names=CONTROLLER
+    remote.log.metadata.manager.class.name = null
+    num.network.threads=3
+    num.io.threads=8
+    socket.send.buffer.bytes=102400
+    socket.receive.buffer.bytes=102400
+    socket.request.max.bytes=104857600
+    offsets.topic.replication.factor=3
+    transaction.state.log.replication.factor=3
+    transaction.state.log.min.isr=2
+    default.replication.factor=3
+    num.partitions=3
+    log.retention.hours=168
+    log.segment.bytes=67108864
+    log.retention.check.interval.ms=300000
+    min.insync.replicas=2  
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config-1
+data:
+  kafka.properties: |
+    process.roles=controller,broker
+    controller.quorum.voters=0@kafka-0.kafka-service.kafka-demo.svc.cluster.local:9093,1@kafka-1.kafka-service.kafka-demo.svc.cluster.local:9093,2@kafka-2.kafka-service.kafka-demo.svc.cluster.local:9093
+    node.id=1
+    broker.id=1
+    cluster.id=my-cluster-id
+    log.dirs=/var/lib/kafka/data
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+    listeners.security.protocol.map=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+    inter.broker.listener.name=PLAINTEXT
+    controller.listener.names=CONTROLLER
+    remote.log.metadata.manager.class.name = null
+    num.network.threads=3
+    num.io.threads=8
+    socket.send.buffer.bytes=102400
+    socket.receive.buffer.bytes=102400
+    socket.request.max.bytes=104857600
+    offsets.topic.replication.factor=3
+    transaction.state.log.replication.factor=3
+    transaction.state.log.min.isr=2
+    default.replication.factor=3
+    num.partitions=3
+    log.retention.hours=168
+    log.segment.bytes=67108864
+    log.retention.check.interval.ms=300000
+    min.insync.replicas=2
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: kafka-config-2
+data:
+  kafka.properties: |
+    process.roles=controller,broker
+    controller.quorum.voters=0@kafka-0.kafka-service.kafka-demo.svc.cluster.local:9093,1@kafka-1.kafka-service.kafka-demo.svc.cluster.local:9093,2@kafka-2.kafka-service.kafka-demo.svc.cluster.local:9093
+    node.id=2
+    broker.id=2
+    cluster.id=my-cluster-id
+    log.dirs=/var/lib/kafka/data
+    listeners=PLAINTEXT://:9092,CONTROLLER://:9093
+    listeners.security.protocol.map=PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+    inter.broker.listener.name=PLAINTEXT
+    controller.listener.names=CONTROLLER
+    remote.log.metadata.manager.class.name = null
+    num.network.threads=3
+    num.io.threads=8
+    socket.send.buffer.bytes=102400
+    socket.receive.buffer.bytes=102400
+    socket.request.max.bytes=104857600
+    offsets.topic.replication.factor=3
+    transaction.state.log.replication.factor=3
+    transaction.state.log.min.isr=2
+    default.replication.factor=3
+    num.partitions=3
+    log.retention.hours=168
+    log.segment.bytes=67108864
+    log.retention.check.interval.ms=300000
+    min.insync.replicas=2
