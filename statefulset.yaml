@@ -23,11 +23,16 @@ spec:
             - sh
             - -c
             - |
-              POD_ID=$(echo $POD_NAME | grep -o '[0-9]*$')         
+              POD_ID=$(echo $POD_NAME | grep -o '[0-9]*$')
+              echo "Loaded config for kafka-${POD_ID}"
+              echo $POD_ID
+              cat /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties
+
+              # rm -rf /var/lib/kafka/data/*
               
               # Start Kafka
               echo "STARTING KAFKA... "
-              /usr/bin/kafka-storage format --config /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties --cluster-id my-cluster-id && \
+              /usr/bin/kafka-storage format --config /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties --cluster-id my-cluster-id --ignore-formatted && \
               exec /usr/bin/kafka-server-start /etc/kafka-configs/kafka-config-${POD_ID}/kafka.properties
               
              
@@ -78,3 +83,19 @@ spec:
           requests:
             storage: 2Gi
         storageClassName: storageclass-azurefile
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-service
+spec:
+  clusterIP: None  # Headless service
+  selector:
+    app: kafka
+  ports:
+    - name: broker
+      port: 9092
+      targetPort: 9092
+    - name: controller
+      port: 9093
+      targetPort: 9093
